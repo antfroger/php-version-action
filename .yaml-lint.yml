@@ -1,5 +1,3 @@
-# See: https://yamllint.readthedocs.io/en/stable/
-
 rules:
   document-end: disable
   document-start:
@@ -10,5 +8,3 @@ rules:
     max: 80
     allow-non-breakable-words: true
     allow-non-breakable-inline-mappings: true
-ignore:
-  - .licenses/
