@@ -1,23 +1,23 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: PHP version action
+description:
+  A GitHub action to use the latest released version of PHP, the minimum
+  supported version (as defined in composer.json of your project), and a build
+  matrix for all versions in between.
+author: Antoine Froger
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: heart
-  color: red
+  icon: bar-chart-2
+  color: green
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
+  working-directory:
+    description: Working directory where your composer.json file is located
     required: true
-    default: '1000'
+    default: .
 
-# Define your outputs here.
 outputs:
-  time:
-    description: Your output description here
+  composer-php-version:
+    description: The PHP version specified in composer.json
 
 runs:
   using: node20
