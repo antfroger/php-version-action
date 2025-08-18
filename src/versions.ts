@@ -65,4 +65,14 @@ const getVersions = async (): Promise<Version[]> => {
   }))
 }
 
-export { phpVersion, matrix, getVersions }
+// Get the minimal version of the given array of versions
+const minimal = (versions: string[]) => {
+  return versions.sort()[0]
+}
+
+// Get the latest/greatest version of the given array of versions
+const latest = (versions: string[]) => {
+  return versions.sort()[versions.length - 1]
+}
+
+export { phpVersion, matrix, getVersions, minimal, latest }

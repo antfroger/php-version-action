@@ -17,6 +17,10 @@ inputs:
 outputs:
   composer-php-version:
     description: The PHP version specified in composer.json
+  minimal:
+    description: The minimal PHP version
+  latest:
+    description: The latest PHP version
   matrix:
     description: A (stringified) array of PHP versions from the minimal supported version to the latest released version
 

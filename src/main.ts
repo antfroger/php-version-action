@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { phpVersion, matrix, getVersions } from './versions.js'
+import { phpVersion, matrix, minimal, getVersions, latest } from './versions.js'
 
 /**
  * The main function for the action.
@@ -12,9 +12,13 @@ export async function run(): Promise<void> {
     const composerPhpVersion = phpVersion(`${workingDir}/composer.json`)
     const versions = await getVersions()
     const mat = matrix(composerPhpVersion, versions)
+    const min = minimal(mat)
+    const lat = latest(mat)
 
     core.setOutput('composer-php-version', composerPhpVersion)
     core.setOutput('matrix', mat)
+    core.setOutput('minimal', min)
+    core.setOutput('latest', lat)
 
     core.debug(`PHP version defined in ${workingDir} is ${composerPhpVersion}`)
   } catch (error) {

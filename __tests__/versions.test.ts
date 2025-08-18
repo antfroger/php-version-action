@@ -6,7 +6,7 @@ import path from 'path'
 import os from 'os'
 
 const versions = await import('../src/versions.js')
-const { phpVersion, matrix } = versions
+const { phpVersion, matrix, minimal, latest } = versions
 
 describe('versions.ts', () => {
   let tempDir: string
@@ -120,6 +120,18 @@ describe('versions.ts', () => {
 
         expect(result).toStrictEqual(testCase.expected)
       }
+    })
+  })
+
+  describe('minimal function', () => {
+    it('returns the minimal version of the given array of versions', async () => {
+      expect(minimal(['8.3', '8.0', '8.4', '7.1', '7.4'])).toEqual('7.1')
+    })
+  })
+
+  describe('latest function', () => {
+    it('returns the latest version of the given array of versions', async () => {
+      expect(latest(['8.3', '8.0', '8.4', '7.1', '7.4'])).toEqual('8.4')
     })
   })
 })

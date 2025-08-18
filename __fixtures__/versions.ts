@@ -1,7 +1,9 @@
 import type {
   phpVersion as PhpVersionType,
   matrix as MatrixType,
-  getVersions as GetVersionsType
+  getVersions as GetVersionsType,
+  minimal as MinimalType,
+  latest as LatestType
 } from '../src/versions.js'
 import { jest } from '@jest/globals'
 
@@ -68,3 +70,9 @@ export const getVersions = jest.fn<typeof GetVersionsType>(async () => [
 
 // Mock matrix function
 export const matrix = jest.fn<typeof MatrixType>()
+
+// Mock minimal function
+export const minimal = jest.fn<typeof MinimalType>()
+
+// Mock latest function
+export const latest = jest.fn<typeof LatestType>()

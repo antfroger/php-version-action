@@ -27287,6 +27287,14 @@ const getVersions = async () => {
         isSecureVersion: v.isSecureVersion
     }));
 };
+// Get the minimal version of the given array of versions
+const minimal = (versions) => {
+    return versions.sort()[0];
+};
+// Get the latest/greatest version of the given array of versions
+const latest = (versions) => {
+    return versions.sort()[versions.length - 1];
+};
 
 /**
  * The main function for the action.
@@ -27299,8 +27307,12 @@ async function run() {
         const composerPhpVersion = phpVersion(`${workingDir}/composer.json`);
         const versions = await getVersions();
         const mat = matrix(composerPhpVersion, versions);
+        const min = minimal(mat);
+        const lat = latest(mat);
         coreExports.setOutput('composer-php-version', composerPhpVersion);
         coreExports.setOutput('matrix', mat);
+        coreExports.setOutput('minimal', min);
+        coreExports.setOutput('latest', lat);
         coreExports.debug(`PHP version defined in ${workingDir} is ${composerPhpVersion}`);
     }
     catch (error) {
