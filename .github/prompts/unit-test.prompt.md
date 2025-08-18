@@ -1,8 +1,7 @@
 # Create Unit Test(s)
 
-You are an expert software engineer tasked with creating unit tests for the
-repository. Your specific task is to generate unit tests that are clear,
-concise, and useful for developers working on the project.
+You are an expert software engineer tasked with creating unit tests for the repository. Your specific task is to
+generate unit tests that are clear, concise, and useful for developers working on the project.
 
 ## Guidelines
 
@@ -15,8 +14,7 @@ Ensure you adhere to the following guidelines when creating unit tests:
 - Use proper assertions to validate the expected outcomes
 - Use `jest` for writing and running tests
 - Place unit tests in the `__tests__` directory
-- Use fixtures for any necessary test data, placed in the `__fixtures__`
-  directory
+- Use fixtures for any necessary test data, placed in the `__fixtures__` directory
 
 ## Example
 
@@ -68,17 +66,12 @@ describe('main.ts', () => {
     core.getInput.mockClear().mockReturnValueOnce('this is not a number')
 
     // Clear the wait mock and return a rejected promise.
-    wait
-      .mockClear()
-      .mockRejectedValueOnce(new Error('milliseconds is not a number'))
+    wait.mockClear().mockRejectedValueOnce(new Error('milliseconds is not a number'))
 
     await run()
 
     // Verify that the action was marked as failed.
-    expect(core.setFailed).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds is not a number'
-    )
+    expect(core.setFailed).toHaveBeenNthCalledWith(1, 'milliseconds is not a number')
   })
 })
 ```

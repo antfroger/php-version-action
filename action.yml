@@ -1,8 +1,7 @@
 name: PHP version action
 description:
-  A GitHub action to use the latest released version of PHP, the minimum
-  supported version (as defined in composer.json of your project), and a build
-  matrix for all versions in between.
+  A GitHub action to use the latest released version of PHP, the minimum supported version (as defined in composer.json
+  of your project), and a build matrix for all versions in between.
 author: Antoine Froger
 
 branding:
@@ -19,9 +18,7 @@ outputs:
   composer-php-version:
     description: The PHP version specified in composer.json
   matrix:
-    description:
-      A (stringified) array of PHP versions from the minimal supported version
-      to the latest released version
+    description: A (stringified) array of PHP versions from the minimal supported version to the latest released version
 
 runs:
   using: node20
