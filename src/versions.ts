@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import semverCoerce from 'semver/functions/coerce.js'
 
 type Version = {
   name: string // The PHP version name (e.g., "8.1", "8.2")
@@ -31,20 +32,6 @@ const composer = (path: string) => {
   return fs.readFileSync(path, 'utf8')
 }
 
-// Get the matrix of versions starting from the given version and ending at the latest released version
-// The versions parameter is an array of Version objects
-// The min parameter is the starting version
-// Returns an array of version names
-const matrix = (min: string, versions: Version[]) => {
-  const result = versions
-    .filter((v) => !v.isFutureVersion) // Only include released versions
-    .map((v) => v.name)
-    .filter((version: string) => version >= min)
-    .sort()
-
-  return result
-}
-
 // Get the PHP versions from the PHP.watch API
 // Returns a normalized array of Version objects with name, isFutureVersion, isEOLVersion, and isSecureVersion properties
 const getVersions = async (): Promise<Version[]> => {
@@ -65,14 +52,48 @@ const getVersions = async (): Promise<Version[]> => {
   }))
 }
 
+// Get the matrix of versions starting from the given version and ending at the latest released version
+// The versions parameter is an array of Version objects
+// The min parameter is the starting version
+// Returns an array of version names
+const matrix = (min: string, versions: Version[]) => {
+  const result = versions
+    .filter((v) => !v.isFutureVersion) // Only include released versions
+    .map((v) => v.name)
+    .filter((version: string) => version >= min)
+
+  const validVersions = validSortedVersions(result)
+  if (validVersions.length === 0) {
+    throw new Error('No valid versions provided')
+  }
+
+  return validVersions.map((v) => v.version)
+}
+
+// Helper function to filter and sort valid semver versions
+const validSortedVersions = (versions: string[]) => {
+  return versions
+    .map((version) => ({ version, coerced: semverCoerce(version) }))
+    .filter(({ coerced }) => coerced !== null)
+    .sort((a, b) => a.coerced!.compare(b.coerced!))
+}
+
 // Get the minimal version of the given array of versions
 const minimal = (versions: string[]) => {
-  return versions.sort()[0]
+  const validVersions = validSortedVersions(versions)
+  if (validVersions.length === 0) {
+    throw new Error('No valid versions provided')
+  }
+  return validVersions[0].version
 }
 
 // Get the latest/greatest version of the given array of versions
 const latest = (versions: string[]) => {
-  return versions.sort()[versions.length - 1]
+  const validVersions = validSortedVersions(versions)
+  if (validVersions.length === 0) {
+    throw new Error('No valid versions provided')
+  }
+  return validVersions[validVersions.length - 1].version
 }
 
 export { phpVersion, matrix, getVersions, minimal, latest }

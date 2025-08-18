@@ -121,17 +121,51 @@ describe('versions.ts', () => {
         expect(result).toStrictEqual(testCase.expected)
       }
     })
+
+    it('filters out invalid semver versions from the matrix', async () => {
+      const mockVersions = [
+        { name: 'invalid-version', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
+        { name: '7.3', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
+        { name: '7.4', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
+        { name: '8.0', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
+        { name: '8.1', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: 'another-invalid', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true }
+      ]
+
+      const result = matrix('7.3', mockVersions)
+
+      // Should only include valid semver versions >= 7.3
+      expect(result).toEqual(['7.3', '7.4', '8.0', '8.1'])
+    })
+
+    it('throws when the matrix is empty', async () => {
+      expect(() => matrix('7.3', [])).toThrow('No valid versions provided')
+    })
+
+    it('throws when the matrix contains only invalid semver versions', async () => {
+      expect(() =>
+        matrix('7.3', [{ name: 'invalid-version', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false }])
+      ).toThrow('No valid versions provided')
+    })
   })
 
   describe('minimal function', () => {
     it('returns the minimal version of the given array of versions', async () => {
       expect(minimal(['8.3', '8.0', '8.4', '7.1', '7.4'])).toEqual('7.1')
     })
+
+    it('throws when there are no valid semver versions', async () => {
+      expect(() => minimal(['a', 'b', 'c'])).toThrow('No valid versions provided')
+    })
   })
 
   describe('latest function', () => {
     it('returns the latest version of the given array of versions', async () => {
       expect(latest(['8.3', '8.0', '8.4', '7.1', '7.4'])).toEqual('8.4')
+    })
+
+    it('throws when there are no valid semver versions', async () => {
+      expect(() => latest(['a', 'b', 'c'])).toThrow('No valid versions provided')
     })
   })
 })
