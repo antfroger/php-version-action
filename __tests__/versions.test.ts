@@ -63,6 +63,15 @@ describe('versions.ts', () => {
       }
     })
 
+    it('returns undefined when composer.json does not have php requirement', async () => {
+      const composerContent = '{"require": {"other-package": "^1.0"}}'
+      const composerPath = path.join(tempDir, 'composer.json')
+      await fs.promises.writeFile(composerPath, composerContent)
+
+      const result = phpVersion(composerPath)
+      expect(result).toBeUndefined()
+    })
+
     it('throws an error when the file cannot be read', async () => {
       const nonExistentPath = path.join(tempDir, 'nonexistent', 'composer.json')
 
@@ -83,13 +92,15 @@ describe('versions.ts', () => {
       )
     })
 
-    it('returns undefined when composer.json does not have php requirement', async () => {
-      const composerContent = '{"require": {"other-package": "^1.0"}}'
-      const composerPath = path.join(tempDir, 'composer.json')
+    it('throws an error when the file is not a json file', async () => {
+      const composerContent = 'this is not a json file'
+      const composerPath = path.join(tempDir, 'composer.txt')
       await fs.promises.writeFile(composerPath, composerContent)
 
-      const result = phpVersion(composerPath)
-      expect(result).toBeUndefined()
+      expect(() => phpVersion(composerPath)).toThrow()
+      expect(() => phpVersion(composerPath)).toThrow(
+        /Unexpected end of JSON input|JSON/i
+      )
     })
   })
 })
