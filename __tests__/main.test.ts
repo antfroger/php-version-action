@@ -18,6 +18,9 @@ describe('main.ts', () => {
     // Set default mock implementations
     core.getInput.mockImplementation(() => '.')
     versions.phpVersion.mockImplementation(() => '7.3')
+    versions.matrix.mockImplementation(() => {
+      return ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+    })
   })
 
   afterEach(() => {
@@ -30,11 +33,8 @@ describe('main.ts', () => {
 
       expect(versions.phpVersion).toHaveBeenCalledWith('./composer.json')
 
-      expect(core.setOutput).toHaveBeenNthCalledWith(
-        1,
-        'composer-php-version',
-        '7.3'
-      )
+      expect(core.setOutput).toHaveBeenNthCalledWith(1, 'composer-php-version', '7.3')
+      expect(core.setOutput).toHaveBeenNthCalledWith(2, 'matrix', ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4'])
     })
 
     it('Sets the version outputs with custom working directory', async () => {
@@ -45,23 +45,18 @@ describe('main.ts', () => {
 
       expect(versions.phpVersion).toHaveBeenCalledWith('./src/composer.json')
 
-      expect(core.setOutput).toHaveBeenNthCalledWith(
-        1,
-        'composer-php-version',
-        '7.3'
-      )
+      expect(core.setOutput).toHaveBeenNthCalledWith(1, 'composer-php-version', '7.3')
+      expect(core.setOutput).toHaveBeenNthCalledWith(2, 'matrix', ['7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4'])
     })
 
     it('Handles different PHP versions returned by phpVersion', async () => {
       versions.phpVersion.mockReturnValueOnce('8.1')
+      versions.matrix.mockReturnValueOnce(['8.1', '8.2', '8.3', '8.4'])
 
       await run()
 
-      expect(core.setOutput).toHaveBeenNthCalledWith(
-        1,
-        'composer-php-version',
-        '8.1'
-      )
+      expect(core.setOutput).toHaveBeenNthCalledWith(1, 'composer-php-version', '8.1')
+      expect(core.setOutput).toHaveBeenNthCalledWith(2, 'matrix', ['8.1', '8.2', '8.3', '8.4'])
     })
   })
 

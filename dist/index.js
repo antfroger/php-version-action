@@ -1,6 +1,7 @@
 import require$$0 from 'os';
 import require$$0$1 from 'crypto';
-import require$$1 from 'fs';
+import * as require$$1 from 'fs';
+import require$$1__default from 'fs';
 import require$$1$5 from 'path';
 import require$$2 from 'http';
 import require$$3 from 'https';
@@ -222,7 +223,7 @@ function requireFileCommand () {
 	// We use any as a valid input type
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	const crypto = __importStar(require$$0$1);
-	const fs = __importStar(require$$1);
+	const fs = __importStar(require$$1__default);
 	const os = __importStar(require$$0);
 	const utils_1 = requireUtils$1();
 	function issueFileCommand(command, message) {
@@ -25200,7 +25201,7 @@ function requireSummary () {
 		Object.defineProperty(exports, "__esModule", { value: true });
 		exports.summary = exports.markdownSummary = exports.SUMMARY_DOCS_URL = exports.SUMMARY_ENV_VAR = void 0;
 		const os_1 = require$$0;
-		const fs_1 = require$$1;
+		const fs_1 = require$$1__default;
 		const { access, appendFile, writeFile } = fs_1.promises;
 		exports.SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY';
 		exports.SUMMARY_DOCS_URL = 'https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary';
@@ -25592,7 +25593,7 @@ function requireIoUtil () {
 		var _a;
 		Object.defineProperty(exports, "__esModule", { value: true });
 		exports.getCmdPath = exports.tryGetExecutablePath = exports.isRooted = exports.isDirectory = exports.exists = exports.READONLY = exports.UV_FS_O_EXLOCK = exports.IS_WINDOWS = exports.unlink = exports.symlink = exports.stat = exports.rmdir = exports.rm = exports.rename = exports.readlink = exports.readdir = exports.open = exports.mkdir = exports.lstat = exports.copyFile = exports.chmod = void 0;
-		const fs = __importStar(require$$1);
+		const fs = __importStar(require$$1__default);
 		const path = __importStar(require$$1$5);
 		_a = fs.promises
 		// export const {open} = 'fs'
@@ -27246,19 +27247,46 @@ function requireCore () {
 
 var coreExports = requireCore();
 
-/**
- * Waits for a number of milliseconds.
- *
- * @param milliseconds The number of milliseconds to wait.
- * @returns Resolves with 'done!' after the wait is over.
- */
-async function wait(milliseconds) {
-    return new Promise((resolve) => {
-        if (isNaN(milliseconds))
-            throw new Error('milliseconds is not a number');
-        setTimeout(() => resolve('done!'), milliseconds);
-    });
-}
+// Return the PHP version as a string
+// The given path should be the path to a composer.json file containing a php requirement
+const phpVersion = (path) => {
+    const content = composer(path);
+    const composerJson = JSON.parse(content);
+    return composerJson.require.php;
+};
+// Read the file from the given path and return the content as a string
+const composer = (path) => {
+    return require$$1.readFileSync(path, 'utf8');
+};
+// Get the matrix of versions starting from the given version and ending at the latest released version
+// The versions parameter is an array of Version objects
+// The min parameter is the starting version
+// Returns an array of version names
+const matrix = (min, versions) => {
+    const result = versions
+        .filter((v) => !v.isFutureVersion) // Only include released versions
+        .map((v) => v.name)
+        .filter((version) => version >= min)
+        .sort();
+    return result;
+};
+// Get the PHP versions from the PHP.watch API
+// Returns a normalized array of Version objects with name, isFutureVersion, isEOLVersion, and isSecureVersion properties
+const getVersions = async () => {
+    const url = 'https://php.watch/api/v1/versions';
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Could not fetch PHP versions from ${url}: ${response.status}`);
+    }
+    const result = (await response.json());
+    // Extract and normalize the versions from the API response
+    return Object.values(result.data).map((v) => ({
+        name: v.name,
+        isFutureVersion: v.isFutureVersion,
+        isEOLVersion: v.isEOLVersion,
+        isSecureVersion: v.isSecureVersion
+    }));
+};
 
 /**
  * The main function for the action.
@@ -27267,15 +27295,13 @@ async function wait(milliseconds) {
  */
 async function run() {
     try {
-        const ms = coreExports.getInput('milliseconds');
-        // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-        coreExports.debug(`Waiting ${ms} milliseconds ...`);
-        // Log the current timestamp, wait, then log the new timestamp
-        coreExports.debug(new Date().toTimeString());
-        await wait(parseInt(ms, 10));
-        coreExports.debug(new Date().toTimeString());
-        // Set outputs for other workflow steps to use
-        coreExports.setOutput('time', new Date().toTimeString());
+        const workingDir = coreExports.getInput('working-directory');
+        const composerPhpVersion = phpVersion(`${workingDir}/composer.json`);
+        const versions = await getVersions();
+        const mat = matrix(composerPhpVersion, versions);
+        coreExports.setOutput('composer-php-version', composerPhpVersion);
+        coreExports.setOutput('matrix', mat);
+        coreExports.debug(`PHP version defined in ${workingDir} is ${composerPhpVersion}`);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
@@ -27283,6 +27309,42 @@ async function run() {
             coreExports.setFailed(error.message);
     }
 }
+// import * as core from "@actions/core";
+// // import * as github from "@actions/github";
+//
+// try {
+//   const workingDir = core.getInput("working-directory");
+//   const unsupported = core.getBooleanInput("unsupported");
+//
+//   core.setOutput("composer-php-version", "7.3");
+//   core.setOutput("latest", "8.4");
+//
+//   if (unsupported) {
+//     core.setOutput("minimal", "7.3");
+//     core.setOutput("matrix", '["7.3","7.4","8.0","8.1","8.2","8.3","8.4"]');
+//   } else {
+//     core.setOutput("minimal", "8.1");
+//     core.setOutput("matrix", '["8.1","8.2","8.3","8.4"]');
+//   }
+//
+//   // All versions: https://php.watch/api/v1/versions
+//   // Supported versions: https://php.watch/api/v1/versions/supported
+//   // Can use all or supported depending on the value of the unsupported input
+//
+//   // Latest version: https://php.watch/api/v1/versions/latest
+//   // Don't think I'll use latest, I can get it from all or supported
+//
+//
+//   // Get the current time and set it as an output variable
+//   // const time = new Date().toTimeString();
+//   // core.setOutput("time", time);
+//
+//   // Get the JSON webhook payload for the event that triggered the workflow
+//   // const payload = JSON.stringify(github.context.payload, undefined, 2);
+//   // core.info(`The event payload: ${payload}`);
+// } catch (error) {
+//   core.setFailed(error.message);
+// }
 
 /**
  * The entrypoint for the action. This file simply imports and runs the action's

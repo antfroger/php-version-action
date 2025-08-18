@@ -6,16 +6,14 @@ import path from 'path'
 import os from 'os'
 
 const versions = await import('../src/versions.js')
-const { phpVersion } = versions
+const { phpVersion, matrix } = versions
 
 describe('versions.ts', () => {
   let tempDir: string
 
   beforeAll(async () => {
     // Create a temporary directory for tests
-    tempDir = await fs.promises.mkdtemp(
-      path.join(os.tmpdir(), 'composer-test-')
-    )
+    tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'composer-test-'))
   })
 
   afterAll(async () => {
@@ -76,9 +74,7 @@ describe('versions.ts', () => {
       const nonExistentPath = path.join(tempDir, 'nonexistent', 'composer.json')
 
       expect(() => phpVersion(nonExistentPath)).toThrow()
-      expect(() => phpVersion(nonExistentPath)).toThrow(
-        /ENOENT|no such file|not found/i
-      )
+      expect(() => phpVersion(nonExistentPath)).toThrow(/ENOENT|no such file|not found/i)
     })
 
     it('throws an error when composer.json has invalid JSON', async () => {
@@ -87,9 +83,7 @@ describe('versions.ts', () => {
       await fs.promises.writeFile(composerPath, composerContent)
 
       expect(() => phpVersion(composerPath)).toThrow()
-      expect(() => phpVersion(composerPath)).toThrow(
-        /Unexpected end of JSON input|JSON/i
-      )
+      expect(() => phpVersion(composerPath)).toThrow(/Unexpected end of JSON input|JSON/i)
     })
 
     it('throws an error when the file is not a json file', async () => {
@@ -98,9 +92,34 @@ describe('versions.ts', () => {
       await fs.promises.writeFile(composerPath, composerContent)
 
       expect(() => phpVersion(composerPath)).toThrow()
-      expect(() => phpVersion(composerPath)).toThrow(
-        /Unexpected end of JSON input|JSON/i
-      )
+      expect(() => phpVersion(composerPath)).toThrow(/Unexpected end of JSON input|JSON/i)
+    })
+  })
+
+  describe('matrix function', () => {
+    it('returns a matrix starting from the PHP version in the composer.json file and ending at the latest released version', async () => {
+      const mockVersions = [
+        { name: '7.2', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
+        { name: '7.3', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
+        { name: '7.4', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
+        { name: '8.0', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
+        { name: '8.1', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: '8.2', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: '8.3', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: '8.4', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: '8.5', isFutureVersion: true, isEOLVersion: false, isSecureVersion: false }
+      ]
+
+      const testCases = [
+        { content: '8.1', expected: ['8.1', '8.2', '8.3', '8.4'] },
+        { content: '8.3', expected: ['8.3', '8.4'] }
+      ]
+
+      for (const testCase of testCases) {
+        const result = matrix(testCase.content, mockVersions)
+
+        expect(result).toStrictEqual(testCase.expected)
+      }
     })
   })
 })

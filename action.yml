@@ -18,6 +18,10 @@ inputs:
 outputs:
   composer-php-version:
     description: The PHP version specified in composer.json
+  matrix:
+    description:
+      A (stringified) array of PHP versions from the minimal supported version
+      to the latest released version
 
 runs:
   using: node20
