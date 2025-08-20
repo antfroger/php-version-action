@@ -111,13 +111,50 @@ describe('versions.ts', () => {
       ]
 
       const testCases = [
-        { content: '8.1', expected: ['8.1', '8.2', '8.3', '8.4'] },
-        { content: '8.3', expected: ['8.3', '8.4'] }
+        // Basic exact version constraints (these should definitely work)
+        { content: '8.1', expected: ['8.1'] },
+        { content: '8.3', expected: ['8.3'] },
+
+        // Simple range constraints (basic semver operations)
+        { content: '>=8.0', expected: ['8.0', '8.1', '8.2', '8.3', '8.4'] },
+        { content: '>7.4', expected: ['8.0', '8.1', '8.2', '8.3', '8.4'] },
+        { content: '<8.3', expected: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2'] },
+        { content: '<=8.2', expected: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2'] },
+
+        // Multiple range constraints (AND logic) - basic semver
+        { content: '>=8.0 <8.3', expected: ['8.0', '8.1', '8.2'] },
+        { content: '>7.4 <=8.2', expected: ['8.0', '8.1', '8.2'] },
+        { content: '>=7.3 <8.1', expected: ['7.3', '7.4', '8.0'] },
+
+        // Tilde version range (~) - semver standard (patch-level changes)
+        { content: '~8.0', expected: ['8.0'] }, // ~8.0 = >=8.0.0 <8.1.0 (only 8.0.x)
+        { content: '~8.1', expected: ['8.1'] }, // ~8.1 = >=8.1.0 <8.2.0 (only 8.1.x)
+        { content: '~8', expected: ['8.0', '8.1', '8.2', '8.3', '8.4'] }, // ~8 = >=8.0.0 <9.0.0
+
+        // Caret version range (^) - semver standard
+        { content: '^8.0', expected: ['8.0', '8.1', '8.2', '8.3', '8.4'] },
+        { content: '^8.1', expected: ['8.1', '8.2', '8.3', '8.4'] },
+        { content: '^7.1.0', expected: ['7.2', '7.3', '7.4'] },
+
+        // Additional semver-compatible constraints
+        { content: '8.0.*', expected: ['8.0'] }, // Wildcard: only 8.0.x patches
+        { content: '8.*', expected: ['8.0', '8.1', '8.2', '8.3', '8.4'] }, // Wildcard: all 8.x.x
+        { content: '8.0 - 8.2', expected: ['8.0', '8.1', '8.2'] }, // Hyphenated range (needs spaces)
+
+        // OR Logic Constraints (||)
+        { content: '>=8.0 || <7.4', expected: ['7.2', '7.3', '8.0', '8.1', '8.2', '8.3', '8.4'] },
+        { content: '8.1 || 8.3', expected: ['8.1', '8.3'] },
+
+        // Inequality Constraints (using OR logic since != is not supported)
+        { content: '<8.1 || >8.1', expected: ['7.2', '7.3', '7.4', '8.0', '8.2', '8.3', '8.4'] },
+
+        // Complex Combined Constraints
+        { content: '>=7.4 <8.3 || ^8.4', expected: ['7.4', '8.0', '8.1', '8.2', '8.4'] },
+        { content: '8.0.* || 8.2.*', expected: ['8.0', '8.2'] }
       ]
 
       for (const testCase of testCases) {
         const result = matrix(testCase.content, mockVersions)
-
         expect(result).toStrictEqual(testCase.expected)
       }
     })
@@ -132,19 +169,21 @@ describe('versions.ts', () => {
         { name: 'another-invalid', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true }
       ]
 
-      const result = matrix('7.3', mockVersions)
+      const result = matrix('>=7.3', mockVersions)
 
       // Should only include valid semver versions >= 7.3
       expect(result).toEqual(['7.3', '7.4', '8.0', '8.1'])
     })
 
     it('throws when the matrix is empty', async () => {
-      expect(() => matrix('7.3', [])).toThrow('No valid versions provided')
+      expect(() => matrix('>=7.3', [])).toThrow('No valid versions provided')
     })
 
     it('throws when the matrix contains only invalid semver versions', async () => {
       expect(() =>
-        matrix('7.3', [{ name: 'invalid-version', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false }])
+        matrix('>=7.3', [
+          { name: 'invalid-version', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false }
+        ])
       ).toThrow('No valid versions provided')
     })
   })
