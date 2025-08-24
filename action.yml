@@ -10,19 +10,19 @@ branding:
 
 inputs:
   working-directory:
-    description: Working directory where your composer.json file is located
+    description: Directory containing your composer.json file
     required: true
     default: .
 
 outputs:
   composer-php-version:
-    description: The PHP version specified in composer.json
+    description: The PHP version requirement from composer.json, f.e. >=8.1 <=8.4
   minimal:
-    description: The minimal PHP version
+    description: The minimum supported PHP version meeting the requirements, f.e. 8.1
   latest:
-    description: The latest PHP version
+    description: The latest available PHP version meeting the requirements, f.e. 8.4
   matrix:
-    description: A (stringified) array of PHP versions from the minimal supported version to the latest released version
+    description: A (stringified) array of PHP versions from min to latest, f.e. [8.1, 8.2, 8.3, 8.4]
 
 runs:
   using: node20
