@@ -20,6 +20,8 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         id: setup-node
@@ -52,13 +54,15 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Test Local Action with all versions
         id: all-versions
         uses: ./
         with:
           working-directory: ./__tests__/testdata
-      - run: test '${{ steps.all-versions.outputs.composer-php-version }}' == '>=8.2'
-      - run: test '${{ steps.all-versions.outputs.minimal }}' == '8.2'
-      - run: test '${{ steps.all-versions.outputs.latest }}' == '8.4'
-      - run: test '${{ steps.all-versions.outputs.matrix }}' == '["8.2","8.3","8.4"]'
+      - run: test "${{ steps.all-versions.outputs.composer-php-version }}" == ">=8.2"
+      - run: test "${{ steps.all-versions.outputs.minimal }}" == "8.2"
+      - run: test "${{ steps.all-versions.outputs.latest }}" == "8.4"
+      - run: test "${{ steps.all-versions.outputs.matrix }}" == '["8.2","8.3","8.4"]'
