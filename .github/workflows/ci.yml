@@ -53,12 +53,12 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Test Local Action
-        id: test-action
+      - name: Test Local Action with all versions
+        id: all-versions
         uses: ./
         with:
-          milliseconds: 2000
-
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+          working-directory: ./__tests__/testdata
+      - run: test '${{ steps.all-versions.outputs.composer-php-version }}' == '>=8.2'
+      - run: test '${{ steps.all-versions.outputs.minimal }}' == '8.2'
+      - run: test '${{ steps.all-versions.outputs.latest }}' == '8.4'
+      - run: test '${{ steps.all-versions.outputs.matrix }}' == '["8.2","8.3","8.4"]'
