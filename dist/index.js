@@ -29082,7 +29082,6 @@ const getVersions = async () => {
 async function run() {
     try {
         const workingDir = coreExports.getInput('working-directory');
-        // const unsupported = core.getBooleanInput("unsupported");
         const composerPhpVersion = phpVersion(`${workingDir}/composer.json`);
         const versions = await getVersions();
         const mat = matrix(composerPhpVersion, versions);
