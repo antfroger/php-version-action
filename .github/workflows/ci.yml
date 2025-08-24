@@ -20,6 +20,8 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         id: setup-node
@@ -52,13 +54,19 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      - name: Test Local Action
-        id: test-action
+      - name: Test Local Action with all versions
+        id: all-versions
         uses: ./
         with:
-          milliseconds: 2000
-
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+          working-directory: ./__tests__/testdata
+      - if: steps.all-versions.outputs.composer-php-version != '>=8.2'
+        run: exit 1
+      - if: steps.all-versions.outputs.minimal != '8.2'
+        run: exit 1
+      - if: steps.all-versions.outputs.latest != '8.4'
+        run: exit 1
+      - if: steps.all-versions.outputs.matrix != '["8.2","8.3","8.4"]'
+        run: exit 1
