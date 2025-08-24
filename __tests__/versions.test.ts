@@ -9,29 +9,29 @@ const versions = await import('../src/versions.js')
 const { phpVersion, matrix, minimal, latest } = versions
 
 describe('versions.ts', () => {
-  let tempDir: string
-
-  beforeAll(async () => {
-    // Create a temporary directory for tests
-    tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'composer-test-'))
-  })
-
-  afterAll(async () => {
-    // Clean up the temporary directory
-    await fs.promises.rm(tempDir, { recursive: true, force: true })
-  })
-
-  beforeEach(async () => {
-    try {
-      // Clean up any files from previous tests
-      const composerPath = path.join(tempDir, 'composer.json')
-      await fs.promises.unlink(composerPath)
-    } catch {
-      // File doesn't exist, which is fine
-    }
-  })
-
   describe('phpVersion function', () => {
+    let tempDir: string
+
+    beforeAll(async () => {
+      // Create a temporary directory for tests
+      tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'composer-test-'))
+    })
+
+    afterAll(async () => {
+      // Clean up the temporary directory
+      await fs.promises.rm(tempDir, { recursive: true, force: true })
+    })
+
+    beforeEach(async () => {
+      try {
+        // Clean up any files from previous tests
+        const composerPath = path.join(tempDir, 'composer.json')
+        await fs.promises.unlink(composerPath)
+      } catch {
+        // File doesn't exist, which is fine
+      }
+    })
+
     it('reads PHP version from composer.json file', async () => {
       const composerContent = '{"require": {"php": ">=7.3"}}'
       const composerPath = path.join(tempDir, 'composer.json')
