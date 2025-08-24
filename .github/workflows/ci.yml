@@ -63,21 +63,10 @@ jobs:
         with:
           working-directory: ./__tests__/testdata
       - if: steps.all-versions.outputs.composer-php-version != '>=8.2'
-        run: |
-          echo "composer version: expected >=8.2 got ${{ steps.all-versions.outputs.composer-php-version }}"
-          exit 1
-
+        run: exit 1
       - if: steps.all-versions.outputs.minimal != '8.2'
-        run: |
-          echo "minimal version: expected 8.2 got ${{ steps.all-versions.outputs.minimal }}"
-          exit 1
-
+        run: exit 1
       - if: steps.all-versions.outputs.latest != '8.4'
-        run: |
-          echo "latest version: expected 8.4 got ${{ steps.all-versions.outputs.latest }}"
-          exit 1
-
+        run: exit 1
       - if: steps.all-versions.outputs.matrix != '["8.2","8.3","8.4"]'
-        run: |
-          echo "matrix: expected ["8.2","8.3","8.4"] got ${{ steps.all-versions.outputs.matrix }}"
-          exit 1
+        run: exit 1
