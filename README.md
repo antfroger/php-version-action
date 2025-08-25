@@ -4,6 +4,7 @@
 ![CI](https://github.com/antfroger/php-version-action/actions/workflows/ci.yml/badge.svg)
 [![Check dist](https://github.com/antfroger/php-version-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/antfroger/php-version-action/workflows/check-dist.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
+[![Release](https://img.shields.io/github/release/antfroger/php-version-action.svg?style=flat-square)](https://github.com/antfroger/php-version-action/releases)
 
 A GitHub Action that automatically determines PHP versions for your workflows by reading your `composer.json` file. This
 action eliminates the need to hardcode PHP versions in your GitHub Actions workflows, making them more maintainable and
