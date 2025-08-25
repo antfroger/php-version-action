@@ -98,7 +98,7 @@ The project enforces code quality through several tools:
 
 - Configuration: `eslint.config.mjs`
 - Run: `npm run lint`
-- Auto-fix: `npm run lint -- --fix`
+- Autofix: `npm run lint -- --fix`
 
 ### Prettier
 

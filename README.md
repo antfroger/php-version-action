@@ -13,7 +13,7 @@ automatically up-to-date.
 ## Overview
 
 From your `composer.json` and the released versions of PHP (read from [PHP.Watch](https://php.watch)), this action
-determines a matrix of all the versions to be used as a build matrix in your GitHub actions.
+determines a matrix of all the versions to be used as a build matrix in your GitHub Actions.
 
 It also exposes the minimal and latest versions as variables to your workflow.
 
