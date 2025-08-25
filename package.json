@@ -1,7 +1,7 @@
 {
   "name": "php-version-action",
   "description": "PHP version action",
-  "version": "1.0.0",
+  "version": "v1.0.0",
   "author": "Antoine Froger",
   "type": "module",
   "repository": {
