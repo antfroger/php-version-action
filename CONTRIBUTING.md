@@ -1,6 +1,7 @@
 # Contributing to PHP Version Action
 
-This document provides guidelines and instructions for setting up the project locally and contributing to its development.
+This document provides guidelines and instructions for setting up the project locally and contributing to its
+development.
 
 ## Prerequisites
 
@@ -15,10 +16,44 @@ This document provides guidelines and instructions for setting up the project lo
    npm install
    ```
 
-2. **Build the Project**
+2. **Package the TypeScript for distribution**
 
    ```bash
-   npm run package
+   npm run bundle
+   ```
+
+## Running Locally
+
+To simulate the GitHub Action locally, you can use the `@github/local-action` package:
+
+1. **Copy the existing `.env.example` file** in your project root:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Run the action locally**:
+
+   ```bash
+   npm run local-action
+   ```
+
+3. **Test with different working directories** by modifying the `.env` file:
+
+   ```bash
+   # Test with a subdirectory
+   echo "INPUT_WORKING-DIRECTORY=./test-dir" > .env
+   npm run local-action
+   ```
+
+4. **For development with real-time changes**:
+
+   ```bash
+   # Build in watch mode
+   npm run package:watch
+
+   # In another terminal, run the local action
+   npm run local-action
    ```
 
 ## Development Workflow
