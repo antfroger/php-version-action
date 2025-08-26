@@ -8,7 +8,7 @@ updates:
       prefix: '[npm] '
     groups:
       minor-patch-updates:
-        update-types: ["minor", "major"]
+        update-types: ['minor', 'major']
 
   - package-ecosystem: 'github-actions'
     directory: '/'
@@ -18,4 +18,4 @@ updates:
       prefix: '[actions] '
     groups:
       minor-patch-updates:
-        update-types: ["minor", "major"]
+        update-types: ['minor', 'major']
