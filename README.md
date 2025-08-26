@@ -58,7 +58,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Get PHP Versions
-        id: php-versions
+        id: php-version
         uses: antfroger/php-version-action@v1
 
       - name: Setup PHP (Minimal)
@@ -77,34 +77,41 @@ simply need to replace `steps.php-version.outputs.minimal` by `steps.php-version
 ### Multi-version Testing
 
 Let's say you want to run the unit tests on all versions starting from the minimum defined in your `composer.json` file
-until the latest released one. You will use the matrix output:
+until the latest released one, you need to run the version lookup as a separate job:
 
 ```yaml
 name: Testing all PHP versions
 on: [push, pull_request]
 
 jobs:
+  php-versions:
+    name: Lookup PHP versions
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.versions.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: antfroger/php-version-action@v1
+        id: versions
+
   test:
-    name: Test on ${{ matrix.os }} with PHP ${{ matrix.php-versions }}
+    name: Test on ${{ matrix.os }} with PHP ${{ matrix.php-version }}
     runs-on: ${{ matrix.os }}
+    needs: php-versions
 
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        php-versions: ${{ fromJSON(steps.php-version.outputs.matrix) }}
+        php-version: ${{ fromJSON(needs.php-versions.outputs.matrix) }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Get PHP Versions
-        id: php-version
-        uses: antfroger/php-version-action@v1
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php-version }}
           coverage: xdebug
           tools: composer:v2
 
