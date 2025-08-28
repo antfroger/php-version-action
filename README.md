@@ -49,6 +49,9 @@ and you want your workflow to set up PHP with the version 8.1 using the shivamma
 name: My workflow
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   my-workflow:
     runs-on: ubuntu-latest
@@ -67,9 +70,11 @@ jobs:
           php-version: ${{ steps.php-version.outputs.minimal }}
           tools: composer:v2
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate
+      - name: Test
+        run: echo "run your tests"
 ```
+
+![Test with minimal](doc/test-minimal.png)
 
 If you want to do the same but using the latest PHP version that meets the requirements defined in `composer.json`, you
 simply need to replace `steps.php-version.outputs.minimal` by `steps.php-version.outputs.latest`
@@ -80,8 +85,11 @@ Let's say you want to run the unit tests on all versions starting from the minim
 until the latest released one, you need to run the version lookup as a separate job:
 
 ```yaml
-name: Testing all PHP versions
+name: Testing matrix
 on: [push, pull_request]
+
+permissions:
+  contents: read
 
 jobs:
   php-versions:
@@ -95,13 +103,13 @@ jobs:
         id: versions
 
   test:
-    name: Test on ${{ matrix.os }} with PHP ${{ matrix.php-version }}
+    name: Test PHP ${{ matrix.php-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: php-versions
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest] # add more os
         php-version: ${{ fromJSON(needs.php-versions.outputs.matrix) }}
 
     steps:
@@ -115,11 +123,11 @@ jobs:
           coverage: xdebug
           tools: composer:v2
 
-      - name: Run Tests
-        run: |
-          composer install
-          vendor/bin/phpunit -v
+      - name: Test
+        run: echo "run your tests"
 ```
+
+![Test with matrix](doc/test-matrix.png)
 
 ### Custom Working Directory
 
@@ -138,11 +146,18 @@ If your `composer.json` is in a subdirectory:
 The action supports all the constraints supported by
 [Composer](https://getcomposer.org/doc/articles/versions.md#writing-version-constraints)
 
+## Summary
+
+The action writes a
+[GitHub Actions Job Summary](https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/) with
+output values it identified.
+
+![Job summary](doc/job-summary.png)
+
 ## Areas for Improvement
 
-1. Add a GitHub Actions Job Summary with values it identified.
-2. Add an input `unstable` to include unstable versions (beta, release candidates)
-3. Add an input `unsupported` to include old versions not longer supported
+1. Add an input `unstable` to include unstable versions (beta, release candidates)
+2. Add an input `unsupported` to include old versions not longer supported
 
 ---
 

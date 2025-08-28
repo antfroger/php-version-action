@@ -29091,7 +29091,23 @@ async function run() {
         coreExports.setOutput('matrix', mat);
         coreExports.setOutput('minimal', min);
         coreExports.setOutput('latest', lat);
-        coreExports.debug(`PHP version defined in ${workingDir} is ${composerPhpVersion}`);
+        const matrixWithLinks = mat
+            .map((v) => `<a href="https://www.php.net/ChangeLog-${v.split('.')[0]}.php#PHP_${v.replaceAll('.', '_')}">PHP ${v}</a>`)
+            .join('<br>');
+        await coreExports.summary
+            .addHeading('PHP versions summary')
+            .addTable([
+            [
+                { data: 'Output', header: true },
+                { data: 'Value', header: true }
+            ],
+            ['Composer requirements', composerPhpVersion],
+            ['minimal', `<a href="https://www.php.net/releases/${min}/en.php">PHP ${min}</a>`],
+            ['latest', `<a href="https://www.php.net/releases/${lat}/en.php">PHP ${lat}</a>`],
+            ['matrix', matrixWithLinks]
+        ])
+            .addRaw(`data extracted from <code>${workingDir}/composer.json</code>`)
+            .write();
     }
     catch (error) {
         // Fail the workflow run if an error occurs
