@@ -49,6 +49,9 @@ and you want your workflow to set up PHP with the version 8.1 using the shivamma
 name: My workflow
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   my-workflow:
     runs-on: ubuntu-latest
@@ -84,6 +87,9 @@ until the latest released one, you need to run the version lookup as a separate 
 ```yaml
 name: Testing matrix
 on: [push, pull_request]
+
+permissions:
+  contents: read
 
 jobs:
   php-versions:
