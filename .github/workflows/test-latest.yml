@@ -1,0 +1,23 @@
+name: My workflow
+on: [push, pull_request]
+
+jobs:
+  my-workflow:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Get PHP Versions
+        id: php-version
+        uses: antfroger/php-version-action@v1
+
+      - name: Setup PHP (Minimal)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ steps.php-version.outputs.minimal }}
+          tools: composer:v2
+
+      - name: Test
+        run: echo "run your tests"

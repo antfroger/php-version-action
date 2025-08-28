@@ -67,8 +67,8 @@ jobs:
           php-version: ${{ steps.php-version.outputs.minimal }}
           tools: composer:v2
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate
+      - name: Test
+        run: echo "run your tests"
 ```
 
 If you want to do the same but using the latest PHP version that meets the requirements defined in `composer.json`, you
@@ -80,7 +80,7 @@ Let's say you want to run the unit tests on all versions starting from the minim
 until the latest released one, you need to run the version lookup as a separate job:
 
 ```yaml
-name: Testing all PHP versions
+name: Testing matrix
 on: [push, pull_request]
 
 jobs:
@@ -95,13 +95,13 @@ jobs:
         id: versions
 
   test:
-    name: Test on ${{ matrix.os }} with PHP ${{ matrix.php-version }}
+    name: Test PHP ${{ matrix.php-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: php-versions
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest] # add more os
         php-version: ${{ fromJSON(needs.php-versions.outputs.matrix) }}
 
     steps:
@@ -115,10 +115,8 @@ jobs:
           coverage: xdebug
           tools: composer:v2
 
-      - name: Run Tests
-        run: |
-          composer install
-          vendor/bin/phpunit -v
+      - name: Test
+        run: echo "run your tests"
 ```
 
 ### Custom Working Directory
