@@ -138,6 +138,12 @@ If your `composer.json` is in a subdirectory:
 The action supports all the constraints supported by
 [Composer](https://getcomposer.org/doc/articles/versions.md#writing-version-constraints)
 
+## Summary
+
+The action writes a [GitHub Actions Job Summary](https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/) with output values it identified.
+
+![Job summary](doc/summary.png)
+
 ## Areas for Improvement
 
 1. Add an input `unstable` to include unstable versions (beta, release candidates)
