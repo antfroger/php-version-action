@@ -66,31 +66,23 @@ jobs:
       - name: Verify composer-php-version
         if: steps.all-versions.outputs.composer-php-version != '>=8.2'
         run: |
-          echo "❌ composer-php-version mismatch:"
-          echo "  Expected: '>=8.2'"
-          echo "  Actual: '${{ steps.all-versions.outputs.composer-php-version }}'"
+          echo "❌ composer-php-version mismatch: Expected '>=8.2'"
           exit 1
 
       - name: Verify minimal version
         if: steps.all-versions.outputs.minimal != '8.2'
         run: |
-          echo "❌ minimal version mismatch:"
-          echo "  Expected: '8.2'"
-          echo "  Actual: '${{ steps.all-versions.outputs.minimal }}'"
+          echo "❌ minimal version mismatch: Expected '8.2'"
           exit 1
 
       - name: Verify latest version
         if: steps.all-versions.outputs.latest != '8.4'
         run: |
-          echo "❌ latest version mismatch:"
-          echo "  Expected: '8.4'"
-          echo "  Actual: '${{ steps.all-versions.outputs.latest }}'"
+          echo "❌ latest version mismatch: Expected '8.4'"
           exit 1
 
       - name: Verify matrix
         if: steps.all-versions.outputs.matrix != '["8.2","8.3","8.4"]'
         run: |
-          echo "❌ matrix mismatch:"
-          echo "  Expected: '[\"8.2\",\"8.3\",\"8.4\"]'"
-          echo "  Actual: '${{ steps.all-versions.outputs.matrix }}'"
+          echo "❌ matrix mismatch: Expected '[\"8.2\",\"8.3\",\"8.4\"]'"
           exit 1
