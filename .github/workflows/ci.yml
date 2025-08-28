@@ -62,11 +62,89 @@ jobs:
         uses: ./
         with:
           working-directory: ./__tests__/testdata
-      - if: steps.all-versions.outputs.composer-php-version != '>=8.2'
-        run: exit 1
-      - if: steps.all-versions.outputs.minimal != '8.2'
-        run: exit 1
-      - if: steps.all-versions.outputs.latest != '8.4'
-        run: exit 1
-      - if: steps.all-versions.outputs.matrix != '["8.2","8.3","8.4"]'
-        run: exit 1
+
+      - name: Debug Action Outputs
+        run: |
+          echo "=== Action Outputs Debug ==="
+          echo "composer-php-version: '${{ steps.all-versions.outputs.composer-php-version }}'"
+          echo "minimal: '${{ steps.all-versions.outputs.minimal }}'"
+          echo "latest: '${{ steps.all-versions.outputs.latest }}'"
+          echo "matrix: '${{ steps.all-versions.outputs.matrix }}'"
+          echo "============================="
+
+      - name: Validate Action Outputs
+        run: |
+          # Check if outputs are set
+          if [ -z "${{ steps.all-versions.outputs.composer-php-version }}" ]; then
+            echo "❌ composer-php-version output is empty or not set"
+            exit 1
+          fi
+
+          if [ -z "${{ steps.all-versions.outputs.minimal }}" ]; then
+            echo "❌ minimal output is empty or not set"
+            exit 1
+          fi
+
+          if [ -z "${{ steps.all-versions.outputs.latest }}" ]; then
+            echo "❌ latest output is empty or not set"
+            exit 1
+          fi
+
+          if [ -z "${{ steps.all-versions.outputs.matrix }}" ]; then
+            echo "❌ matrix output is empty or not set"
+            exit 1
+          fi
+
+          echo "✅ All outputs are set"
+
+      - name: Verify composer-php-version
+        run: |
+          expected=">=8.2"
+          actual="${{ steps.all-versions.outputs.composer-php-version }}"
+
+          if [ "$actual" != "$expected" ]; then
+            echo "❌ composer-php-version mismatch:"
+            echo "  Expected: $expected"
+            echo "  Actual:   $actual"
+            exit 1
+          fi
+          echo "✅ composer-php-version matches expected: $actual"
+
+      - name: Verify minimal version
+        run: |
+          expected="8.2"
+          actual="${{ steps.all-versions.outputs.minimal }}"
+
+          if [ "$actual" != "$expected" ]; then
+            echo "❌ minimal version mismatch:"
+            echo "  Expected: $expected"
+            echo "  Actual:   $actual"
+            exit 1
+          fi
+          echo "✅ minimal version matches expected: $actual"
+
+      - name: Verify latest version
+        run: |
+          expected="8.4"
+          actual="${{ steps.all-versions.outputs.latest }}"
+
+          if [ "$actual" != "$expected" ]; then
+            echo "❌ latest version mismatch:"
+            echo "  Expected: $expected"
+            echo "  Actual:   $actual"
+            exit 1
+          fi
+          echo "✅ latest version matches expected: $actual"
+
+      - name: Verify matrix
+        run: |
+          expected='["8.2","8.3","8.4"]'
+          actual="${{ steps.all-versions.outputs.matrix }}"
+
+          if [ "$actual" != "$expected" ]; then
+            echo "❌ matrix mismatch:"
+            echo "  Expected: $expected"
+            echo "  Actual:   $actual"
+            exit 1
+          fi
+          echo "✅ matrix matches expected: $actual"
