@@ -98,7 +98,7 @@ jobs:
 
       - name: Verify matrix
         run: |
-          expected='["8.2","8.3","8.4"]'
+          expected='[8.2,8.3,8.4]'
           actual="${{ steps.all-versions.outputs.matrix }}"
 
           if [ "$actual" != "$expected" ]; then
