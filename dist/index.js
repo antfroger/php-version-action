@@ -29092,7 +29092,7 @@ async function run() {
         coreExports.setOutput('minimal', min);
         coreExports.setOutput('latest', lat);
         const matrixWithLinks = mat
-            .map((v) => `<a href="https://www.php.net/ChangeLog-${v.split('.')[0]}.php#${v}">PHP ${v}</a>`)
+            .map((v) => `<a href="https://www.php.net/ChangeLog-${v.split('.')[0]}.php#PHP_${v.replaceAll('.', '_')}">PHP ${v}</a>`)
             .join('<br>');
         await coreExports.summary
             .addHeading('PHP versions summary')
@@ -29101,7 +29101,7 @@ async function run() {
                 { data: 'Output', header: true },
                 { data: 'Value', header: true }
             ],
-            ['Composer PHP version', composerPhpVersion],
+            ['Composer requirements', composerPhpVersion],
             ['minimal', `<a href="https://www.php.net/releases/${min}/en.php">PHP ${min}</a>`],
             ['latest', `<a href="https://www.php.net/releases/${lat}/en.php">PHP ${lat}</a>`],
             ['matrix', matrixWithLinks]
