@@ -71,6 +71,8 @@ jobs:
         run: echo "run your tests"
 ```
 
+![Test with minimal](doc/test-minimal.png)
+
 If you want to do the same but using the latest PHP version that meets the requirements defined in `composer.json`, you
 simply need to replace `steps.php-version.outputs.minimal` by `steps.php-version.outputs.latest`
 
@@ -119,6 +121,8 @@ jobs:
         run: echo "run your tests"
 ```
 
+![Test with matrix](doc/test-matrix.png)
+
 ### Custom Working Directory
 
 If your `composer.json` is in a subdirectory:
@@ -138,9 +142,11 @@ The action supports all the constraints supported by
 
 ## Summary
 
-The action writes a [GitHub Actions Job Summary](https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/) with output values it identified.
+The action writes a
+[GitHub Actions Job Summary](https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/) with
+output values it identified.
 
-![Job summary](doc/summary.png)
+![Job summary](doc/job-summary.png)
 
 ## Areas for Improvement
 
