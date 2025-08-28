@@ -68,11 +68,10 @@ jobs:
           expected=">=8.2"
           actual="${{ steps.all-versions.outputs.composer-php-version }}"
 
-          if [ "$actual" != ">=8.2" ]; then
+          if [ "$actual" != "$expected" ]; then
             echo "❌ composer-php-version mismatch: Expected: $expected, Actual: $actual"
             exit 1
           fi
-          echo "✅ composer-php-version matches expected: $actual"
 
       - name: Verify minimal version
         run: |
@@ -83,7 +82,6 @@ jobs:
             echo "❌ minimal version mismatch: Expected: $expected, Actual: $actual"
             exit 1
           fi
-          echo "✅ minimal version matches expected: $actual"
 
       - name: Verify latest version
         run: |
@@ -94,7 +92,6 @@ jobs:
             echo "❌ latest version mismatch: Expected: $expected, Actual: $actual"
             exit 1
           fi
-          echo "✅ latest version matches expected: $actual"
 
       - name: Verify matrix
         run: |
@@ -105,4 +102,3 @@ jobs:
             echo "❌ matrix mismatch: Expected: $expected, Actual: $actual"
             exit 1
           fi
-          echo "✅ matrix matches expected: $actual"
