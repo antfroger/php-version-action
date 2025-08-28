@@ -20,6 +20,11 @@ export async function run(): Promise<void> {
     core.setOutput('minimal', min)
     core.setOutput('latest', lat)
 
+    core.info(`composer-php-version: ${composerPhpVersion}`)
+    core.info(`matrix: ${mat}`)
+    core.info(`minimal: ${min}`)
+    core.info(`latest: ${lat}`)
+
     const matrixWithLinks = mat
       .map(
         (v) =>
