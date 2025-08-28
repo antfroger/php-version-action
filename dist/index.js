@@ -29091,6 +29091,10 @@ async function run() {
         coreExports.setOutput('matrix', mat);
         coreExports.setOutput('minimal', min);
         coreExports.setOutput('latest', lat);
+        coreExports.info(`composer-php-version: ${composerPhpVersion}`);
+        coreExports.info(`matrix: ${mat}`);
+        coreExports.info(`minimal: ${min}`);
+        coreExports.info(`latest: ${lat}`);
         const matrixWithLinks = mat
             .map((v) => `<a href="https://www.php.net/ChangeLog-${v.split('.')[0]}.php#PHP_${v.replaceAll('.', '_')}">PHP ${v}</a>`)
             .join('<br>');
