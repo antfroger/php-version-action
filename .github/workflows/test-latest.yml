@@ -12,6 +12,8 @@ jobs:
       - name: Get PHP Versions
         id: php-version
         uses: antfroger/php-version-action@v1
+        with:
+          working-directory: ./__tests__/testdata
 
       - name: Setup PHP (Minimal)
         uses: shivammathur/setup-php@v2
