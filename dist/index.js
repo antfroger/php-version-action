@@ -29106,7 +29106,7 @@ async function run() {
             ['latest', `<a href="https://www.php.net/releases/${lat}/en.php">PHP ${lat}</a>`],
             ['matrix', matrixWithLinks]
         ])
-            .addRaw(`data extracted from ${workingDir}/composer.json`)
+            .addRaw(`data extracted from <code>${workingDir}/composer.json</code>`)
             .write();
     }
     catch (error) {
