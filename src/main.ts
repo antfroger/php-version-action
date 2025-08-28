@@ -20,7 +20,24 @@ export async function run(): Promise<void> {
     core.setOutput('minimal', min)
     core.setOutput('latest', lat)
 
-    core.debug(`PHP version defined in ${workingDir} is ${composerPhpVersion}`)
+    const matrixWithLinks = mat
+      .map((v) => `<a href="https://www.php.net/ChangeLog-${v.split('.')[0]}.php#${v}">PHP ${v}</a>`)
+      .join('<br>')
+
+    await core.summary
+      .addHeading('PHP versions summary')
+      .addTable([
+        [
+          { data: 'Output', header: true },
+          { data: 'Value', header: true }
+        ],
+        ['Composer PHP version', composerPhpVersion],
+        ['minimal', `<a href="https://www.php.net/releases/${min}/en.php">PHP ${min}</a>`],
+        ['latest', `<a href="https://www.php.net/releases/${lat}/en.php">PHP ${lat}</a>`],
+        ['matrix', matrixWithLinks]
+      ])
+      .addRaw(`data extracted from ${workingDir}/composer.json`)
+      .write()
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)

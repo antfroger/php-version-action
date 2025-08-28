@@ -140,9 +140,8 @@ The action supports all the constraints supported by
 
 ## Areas for Improvement
 
-1. Add a GitHub Actions Job Summary with values it identified.
-2. Add an input `unstable` to include unstable versions (beta, release candidates)
-3. Add an input `unsupported` to include old versions not longer supported
+1. Add an input `unstable` to include unstable versions (beta, release candidates)
+2. Add an input `unsupported` to include old versions not longer supported
 
 ---
 
