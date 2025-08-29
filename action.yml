@@ -1,7 +1,7 @@
 name: PHP version action
 description:
-  A GitHub action to use the latest released version of PHP, the minimum supported version (as defined in composer.json
-  of your project), and a build matrix for all versions in between.
+  An action to use the minimum and the latest version of PHP (as defined in composer.json) and build version matrix in
+  between
 author: Antoine Froger
 
 branding:
