@@ -100,7 +100,7 @@ jobs:
         env:
           MATRIX: ${{ steps.all-versions.outputs.matrix }}
         run: |
-          expected='["8.2","8.3","8.4","8.5"]'
+          expected='["8.2","8.3","8.4"]'
 
           if [ "$MATRIX" != "$expected" ]; then
             echo "❌ matrix mismatch: Expected '$expected', got '$MATRIX'"
