@@ -73,6 +73,7 @@ jobs:
             echo "❌ composer-php-version mismatch: Expected '$expected', got '$COMPOSER_PHP_VERSION'"
             exit 1
           fi
+          echo "✅ composer-php-version matches expected: $COMPOSER_PHP_VERSION"
 
       - name: Verify minimal version
         env:
@@ -84,6 +85,7 @@ jobs:
             echo "❌ minimal version mismatch: Expected '$expected', got '$MINIMAL'"
             exit 1
           fi
+          echo "✅ minimal version matches expected: $MINIMAL"
 
       - name: Verify latest version
         env:
@@ -95,6 +97,7 @@ jobs:
             echo "❌ latest version mismatch: Expected '$expected', got '$LATEST'"
             exit 1
           fi
+          echo "✅ latest version matches expected: $LATEST"
 
       - name: Verify matrix
         env:
@@ -106,3 +109,4 @@ jobs:
             echo "❌ matrix mismatch: Expected '$expected', got '$MATRIX'"
             exit 1
           fi
+          echo "✅ matrix matches expected: $MATRIX"
