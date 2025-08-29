@@ -67,7 +67,7 @@ jobs:
         env:
           COMPOSER_PHP_VERSION: ${{ steps.all-versions.outputs.composer-php-version }}
         run: |
-          expected=">=8.2"
+          expected=">=8.256"
 
           if [ "$COMPOSER_PHP_VERSION" != "$expected" ]; then
             echo "❌ composer-php-version mismatch: Expected '$expected', got '$COMPOSER_PHP_VERSION'"
@@ -78,7 +78,7 @@ jobs:
         env:
           MINIMAL: ${{ steps.all-versions.outputs.minimal }}
         run: |
-          expected="8.2"
+          expected="8.0"
 
           if [ "$MINIMAL" != "$expected" ]; then
             echo "❌ minimal version mismatch: Expected '$expected', got '$MINIMAL'"
@@ -89,7 +89,7 @@ jobs:
         env:
           LATEST: ${{ steps.all-versions.outputs.latest }}
         run: |
-          expected="8.4"
+          expected="8.5"
 
           if [ "$LATEST" != "$expected" ]; then
             echo "❌ latest version mismatch: Expected '$expected', got '$LATEST'"
@@ -100,7 +100,7 @@ jobs:
         env:
           MATRIX: ${{ steps.all-versions.outputs.matrix }}
         run: |
-          expected='["8.2","8.3","8.4"]'
+          expected='["8.2","8.3","8.4","8.5"]'
 
           if [ "$MATRIX" != "$expected" ]; then
             echo "❌ matrix mismatch: Expected '$expected', got '$MATRIX'"
