@@ -64,25 +64,45 @@ jobs:
           working-directory: ./__tests__/testdata
 
       - name: Verify composer-php-version
-        if: steps.all-versions.outputs.composer-php-version != '>=8.2'
+        env:
+          COMPOSER_PHP_VERSION: ${{ steps.all-versions.outputs.composer-php-version }}
         run: |
-          echo "❌ composer-php-version mismatch: Expected '>=8.2'"
-          exit 1
+          expected=">=8.2"
+
+          if [ "$COMPOSER_PHP_VERSION" != "$expected" ]; then
+            echo "❌ composer-php-version mismatch: Expected '$expected', got '$COMPOSER_PHP_VERSION'"
+            exit 1
+          fi
 
       - name: Verify minimal version
-        if: steps.all-versions.outputs.minimal != '8.2'
+        env:
+          MINIMAL: ${{ steps.all-versions.outputs.minimal }}
         run: |
-          echo "❌ minimal version mismatch: Expected '8.2'"
-          exit 1
+          expected="8.2"
+
+          if [ "$MINIMAL" != "$expected" ]; then
+            echo "❌ minimal version mismatch: Expected '$expected', got '$MINIMAL'"
+            exit 1
+          fi
 
       - name: Verify latest version
-        if: steps.all-versions.outputs.latest != '8.4'
+        env:
+          LATEST: ${{ steps.all-versions.outputs.latest }}
         run: |
-          echo "❌ latest version mismatch: Expected '8.4'"
-          exit 1
+          expected="8.4"
+
+          if [ "$LATEST" != "$expected" ]; then
+            echo "❌ latest version mismatch: Expected '$expected', got '$LATEST'"
+            exit 1
+          fi
 
       - name: Verify matrix
-        if: steps.all-versions.outputs.matrix != '["8.2","8.3","8.4"]'
+        env:
+          MATRIX: ${{ steps.all-versions.outputs.matrix }}
         run: |
-          echo "❌ matrix mismatch: Expected '[\"8.2\",\"8.3\",\"8.4\"]'"
-          exit 1
+          expected='["8.2","8.3","8.4"]'
+
+          if [ "$MATRIX" != "$expected" ]; then
+            echo "❌ matrix mismatch: Expected '$expected', got '$MATRIX'"
+            exit 1
+          fi
