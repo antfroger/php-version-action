@@ -62,11 +62,51 @@ jobs:
         uses: ./
         with:
           working-directory: ./__tests__/testdata
-      - if: steps.all-versions.outputs.composer-php-version != '>=8.2'
-        run: exit 1
-      - if: steps.all-versions.outputs.minimal != '8.2'
-        run: exit 1
-      - if: steps.all-versions.outputs.latest != '8.4'
-        run: exit 1
-      - if: steps.all-versions.outputs.matrix != '["8.2","8.3","8.4"]'
-        run: exit 1
+
+      - name: Verify composer-php-version
+        env:
+          COMPOSER_PHP_VERSION: ${{ steps.all-versions.outputs.composer-php-version }}
+        run: |
+          expected=">=8.2"
+
+          if [ "$COMPOSER_PHP_VERSION" != "$expected" ]; then
+            echo "❌ composer-php-version mismatch: Expected '$expected', got '$COMPOSER_PHP_VERSION'"
+            exit 1
+          fi
+          echo "✅ composer-php-version matches expected: $COMPOSER_PHP_VERSION"
+
+      - name: Verify minimal version
+        env:
+          MINIMAL: ${{ steps.all-versions.outputs.minimal }}
+        run: |
+          expected="8.2"
+
+          if [ "$MINIMAL" != "$expected" ]; then
+            echo "❌ minimal version mismatch: Expected '$expected', got '$MINIMAL'"
+            exit 1
+          fi
+          echo "✅ minimal version matches expected: $MINIMAL"
+
+      - name: Verify latest version
+        env:
+          LATEST: ${{ steps.all-versions.outputs.latest }}
+        run: |
+          expected="8.4"
+
+          if [ "$LATEST" != "$expected" ]; then
+            echo "❌ latest version mismatch: Expected '$expected', got '$LATEST'"
+            exit 1
+          fi
+          echo "✅ latest version matches expected: $LATEST"
+
+      - name: Verify matrix
+        env:
+          MATRIX: ${{ steps.all-versions.outputs.matrix }}
+        run: |
+          expected='["8.2","8.3","8.4"]'
+
+          if [ "$MATRIX" != "$expected" ]; then
+            echo "❌ matrix mismatch: Expected '$expected', got '$MATRIX'"
+            exit 1
+          fi
+          echo "✅ matrix matches expected: $MATRIX"
