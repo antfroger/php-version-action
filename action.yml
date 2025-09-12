@@ -13,6 +13,10 @@ inputs:
     description: Directory containing your composer.json file
     required: true
     default: .
+  unstable:
+    description: Include unstable versions of PHP (beta, release candidates)
+    required: true
+    default: false
 
 outputs:
   composer-php-version:

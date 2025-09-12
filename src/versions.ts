@@ -87,14 +87,13 @@ const validSortedVersions = (versions: string[]): ValidVersion[] => {
  * Returns a matrix of PHP versions that satisfy the given composer version requirement
  * @param composerVersion - The composer version constraint (e.g., ">=8.1", "^8.0", "8.1")
  * @param versions - Array of Version objects to filter from
+ * @param inclUnstable - Whether to include future/unreleased versions in the matrix
  * @returns Array of version names that satisfy the constraint, sorted by version
  * @throws {Error} When no versions satisfy the constraint
  */
-const matrix = (composerVersion: string, versions: Version[]) => {
+const matrix = (composerVersion: string, versions: Version[], inclUnstable = false) => {
   const result = validSortedVersions(
-    versions
-      .filter((v) => !v.isFutureVersion) // Only include released versions
-      .map((v) => v.name)
+    versions.filter((v) => inclUnstable || !v.isFutureVersion).map((v) => v.name)
   ).filter((version: ValidVersion) => semverSatisfies(version.coerced.version, composerVersion))
 
   if (result.length === 0) {
