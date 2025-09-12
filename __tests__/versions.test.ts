@@ -186,6 +186,18 @@ describe('versions.ts', () => {
         ])
       ).toThrow('No valid versions provided')
     })
+
+    it('includes future versions when inclUnstable is true', async () => {
+      const mockVersions = [
+        { name: '8.3', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: '8.4', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: '8.5', isFutureVersion: true, isEOLVersion: false, isSecureVersion: false }
+      ]
+
+      expect(matrix('>=8.3', mockVersions, true)).toStrictEqual(['8.3', '8.4', '8.5'])
+      expect(matrix('8.*', mockVersions, true)).toStrictEqual(['8.3', '8.4', '8.5'])
+      expect(matrix('^8.4', mockVersions, true)).toStrictEqual(['8.4', '8.5'])
+    })
   })
 
   describe('minimal function', () => {

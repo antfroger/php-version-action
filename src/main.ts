@@ -9,9 +9,11 @@ import { phpVersion, matrix, minimal, getVersions, latest } from './versions.js'
 export async function run(): Promise<void> {
   try {
     const workingDir: string = core.getInput('working-directory')
+    const includeUnstable = core.getBooleanInput('unstable')
     const composerPhpVersion = phpVersion(`${workingDir}/composer.json`)
     const versions = await getVersions()
-    const mat = matrix(composerPhpVersion, versions)
+
+    const mat = matrix(composerPhpVersion, versions, includeUnstable)
     const min = minimal(mat)
     const lat = latest(mat)
 

@@ -25,9 +25,10 @@ It also exposes the minimal and latest versions as variables to your workflow.
 
 ## Inputs
 
-| Name                | Description                                  | Required | Default |
-| ------------------- | -------------------------------------------- | -------- | ------- |
-| `working-directory` | Directory containing your composer.json file | Yes      | `.`     |
+| Name                | Description                                              | Required | Default |
+| ------------------- | -------------------------------------------------------- | -------- | ------- |
+| `working-directory` | Directory containing your composer.json file             | Yes      | `.`     |
+| `unstable`          | Include unstable PHP versions (beta, release candidates) | Yes      | `false` |
 
 ## Outputs
 
@@ -101,6 +102,8 @@ jobs:
       - uses: actions/checkout@v5
       - uses: antfroger/php-version-action@v1
         id: versions
+        with:
+          unstable: true # set to false (or remove the param) to exclude unreleased versions
 
   test:
     name: Test PHP ${{ matrix.php-version }} on ${{ matrix.os }}
@@ -141,6 +144,18 @@ If your `composer.json` is in a subdirectory:
     working-directory: ./packages/my-package
 ```
 
+### Include unstable versions
+
+By default, unstable versions are not included. But if you want to include them, set the input `unstable` to `true`:
+
+```yaml
+- name: Get PHP Versions
+  id: php-versions
+  uses: antfroger/php-version-action@v1
+  with:
+    unstable: true
+```
+
 ## Supported Version Constraints
 
 The action supports all the constraints supported by
@@ -156,8 +171,7 @@ output values it identified.
 
 ## Areas for Improvement
 
-1. Add an input `unstable` to include unstable versions (beta, release candidates)
-2. Add an input `unsupported` to include old versions not longer supported
+1. Add an input `unsupported` to include old versions no longer supported
 
 ---
 
