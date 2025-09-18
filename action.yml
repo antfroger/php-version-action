@@ -17,6 +17,10 @@ inputs:
     description: Include unstable versions of PHP (beta, release candidates)
     required: true
     default: false
+  unsupported:
+    description: Include unsupported versions of PHP (EOL and no security support)
+    required: true
+    default: true
 
 outputs:
   composer-php-version:

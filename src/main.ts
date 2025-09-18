@@ -10,10 +10,11 @@ export async function run(): Promise<void> {
   try {
     const workingDir: string = core.getInput('working-directory')
     const includeUnstable = core.getBooleanInput('unstable')
+    const includeUnsupported = core.getBooleanInput('unsupported')
     const composerPhpVersion = phpVersion(`${workingDir}/composer.json`)
     const versions = await getVersions()
 
-    const mat = matrix(composerPhpVersion, versions, includeUnstable)
+    const mat = matrix(composerPhpVersion, versions, includeUnstable, includeUnsupported)
     const min = minimal(mat)
     const lat = latest(mat)
 

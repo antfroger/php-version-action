@@ -29016,11 +29016,14 @@ const validSortedVersions = (versions) => {
  * @param composerVersion - The composer version constraint (e.g., ">=8.1", "^8.0", "8.1")
  * @param versions - Array of Version objects to filter from
  * @param inclUnstable - Whether to include future/unreleased versions in the matrix
+ * @param inclUnsupported - Whether to include unsupported versions (EOL and no security)
  * @returns Array of version names that satisfy the constraint, sorted by version
  * @throws {Error} When no versions satisfy the constraint
  */
-const matrix = (composerVersion, versions, inclUnstable = false) => {
-    const result = validSortedVersions(versions.filter((v) => inclUnstable || !v.isFutureVersion).map((v) => v.name)).filter((version) => semverSatisfies(version.coerced.version, composerVersion));
+const matrix = (composerVersion, versions, inclUnstable = false, inclUnsupported = true) => {
+    const result = validSortedVersions(versions
+        .filter((v) => (inclUnstable || !v.isFutureVersion) && (inclUnsupported || !(v.isEOLVersion && !v.isSecureVersion)))
+        .map((v) => v.name)).filter((version) => semverSatisfies(version.coerced.version, composerVersion));
     if (result.length === 0) {
         throw new Error('No valid versions provided');
     }
@@ -29082,9 +29085,10 @@ async function run() {
     try {
         const workingDir = coreExports.getInput('working-directory');
         const includeUnstable = coreExports.getBooleanInput('unstable');
+        const includeUnsupported = coreExports.getBooleanInput('unsupported');
         const composerPhpVersion = phpVersion(`${workingDir}/composer.json`);
         const versions = await getVersions();
-        const mat = matrix(composerPhpVersion, versions, includeUnstable);
+        const mat = matrix(composerPhpVersion, versions, includeUnstable, includeUnsupported);
         const min = minimal(mat);
         const lat = latest(mat);
         coreExports.setOutput('composer-php-version', composerPhpVersion);
