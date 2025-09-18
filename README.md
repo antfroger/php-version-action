@@ -29,6 +29,7 @@ It also exposes the minimal and latest versions as variables to your workflow.
 | ------------------- | -------------------------------------------------------- | -------- | ------- |
 | `working-directory` | Directory containing your composer.json file             | Yes      | `.`     |
 | `unstable`          | Include unstable PHP versions (beta, release candidates) | Yes      | `false` |
+| `unsupported`       | Include unsupported versions (EOL, no security updates)  | Yes      | `true`  |
 
 ## Outputs
 
@@ -103,7 +104,8 @@ jobs:
       - uses: antfroger/php-version-action@v1
         id: versions
         with:
-          unstable: true # set to false (or remove the param) to exclude unreleased versions
+          unstable: true     # set to false (or remove the param) to exclude unreleased versions
+          unsupported: false # set to true (or remove the param) to include unsupported versions
 
   test:
     name: Test PHP ${{ matrix.php-version }} on ${{ matrix.os }}
@@ -154,6 +156,17 @@ By default, unstable versions are not included. But if you want to include them,
   uses: antfroger/php-version-action@v1
   with:
     unstable: true
+
+### Exclude unsupported versions
+
+By default, unsupported versions (EOL and no security updates) are included. To exclude them, set `unsupported` to `false`:
+
+```yaml
+- name: Get PHP Versions
+  id: php-versions
+  uses: antfroger/php-version-action@v1
+  with:
+    unsupported: false
 ```
 
 ## Supported Version Constraints
