@@ -17,6 +17,11 @@ describe('main.ts', () => {
 
     // Set default mock implementations
     core.getInput.mockImplementation((name?: string) => (name === 'unstable' ? 'false' : '.'))
+    core.getBooleanInput.mockImplementation((name?: string) => {
+      if (name === 'unstable') return false
+      if (name === 'unsupported') return true
+      return false
+    })
     versions.getVersions.mockResolvedValue([
       { name: '7.3', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
       { name: '7.4', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false },
@@ -71,12 +76,26 @@ describe('main.ts', () => {
       expect(core.setOutput).toHaveBeenNthCalledWith(4, 'latest', '8.4')
     })
 
-    it('Passes the unstable param to matrix when input is defined', async () => {
-      core.getBooleanInput.mockReturnValueOnce(true)
+    it('Passes the unstable and unsupported params to matrix when input is defined', async () => {
+      core.getBooleanInput.mockImplementation((name?: string) => {
+        if (name === 'unstable') return true
+        if (name === 'unsupported') return true
+        return false
+      })
 
       await run()
 
-      expect(versions.matrix).toHaveBeenCalledWith(expect.any(String), expect.any(Array), true)
+      expect(versions.matrix).toHaveBeenCalledWith(expect.any(String), expect.any(Array), true, true)
+
+      core.getBooleanInput.mockImplementation((name?: string) => {
+        if (name === 'unstable') return false
+        if (name === 'unsupported') return false
+        return false
+      })
+
+      await run()
+
+      expect(versions.matrix).toHaveBeenCalledWith(expect.any(String), expect.any(Array), false, false)
     })
   })
 

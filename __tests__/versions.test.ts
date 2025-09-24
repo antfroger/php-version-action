@@ -198,6 +198,20 @@ describe('versions.ts', () => {
       expect(matrix('8.*', mockVersions, true)).toStrictEqual(['8.3', '8.4', '8.5'])
       expect(matrix('^8.4', mockVersions, true)).toStrictEqual(['8.4', '8.5'])
     })
+
+    it('excludes unsupported versions when inclUnsupported is false', async () => {
+      const mockVersions = [
+        { name: '7.2', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false }, // unsupported
+        { name: '7.3', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false }, // unsupported
+        { name: '7.4', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false }, // unsupported
+        { name: '8.0', isFutureVersion: false, isEOLVersion: true, isSecureVersion: false }, // unsupported
+        { name: '8.1', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: '8.2', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true },
+        { name: '8.3', isFutureVersion: false, isEOLVersion: false, isSecureVersion: true }
+      ]
+
+      expect(matrix('>=7.2', mockVersions, false, false)).toStrictEqual(['8.1', '8.2', '8.3'])
+    })
   })
 
   describe('minimal function', () => {
