@@ -104,7 +104,7 @@ jobs:
       - uses: antfroger/php-version-action@v1
         id: versions
         with:
-          unstable: true     # set to false (or remove the param) to exclude unreleased versions
+          unstable: true # set to false (or remove the param) to exclude unreleased versions
           unsupported: false # set to true (or remove the param) to include unsupported versions
 
   test:
@@ -156,10 +156,12 @@ By default, unstable versions are not included. But if you want to include them,
   uses: antfroger/php-version-action@v1
   with:
     unstable: true
+```
 
 ### Exclude unsupported versions
 
-By default, unsupported versions (EOL and no security updates) are included. To exclude them, set `unsupported` to `false`:
+By default, unsupported versions (EOL and no security updates) are included. To exclude them, set `unsupported` to
+`false`:
 
 ```yaml
 - name: Get PHP Versions
@@ -181,10 +183,6 @@ The action writes a
 output values it identified.
 
 ![Job summary](doc/job-summary.png)
-
-## Areas for Improvement
-
-1. Add an input `unsupported` to include old versions no longer supported
 
 ---
 
