@@ -91,7 +91,7 @@ jobs:
         env:
           LATEST: ${{ steps.all-versions.outputs.latest }}
         run: |
-          expected="8.4"
+          expected="8.5"
 
           if [ "$LATEST" != "$expected" ]; then
             echo "❌ latest version mismatch: Expected '$expected', got '$LATEST'"
