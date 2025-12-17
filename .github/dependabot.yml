@@ -7,8 +7,8 @@ updates:
     commit-message:
       prefix: '[npm] '
     groups:
-      minor-patch-updates:
-        update-types: ['minor', 'major']
+      all:
+        patterns: ["*"]
 
   - package-ecosystem: 'github-actions'
     directory: '/'
@@ -17,5 +17,5 @@ updates:
     commit-message:
       prefix: '[actions] '
     groups:
-      minor-patch-updates:
-        update-types: ['minor', 'major']
+      all:
+        patterns: ["*"]
