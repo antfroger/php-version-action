@@ -33,5 +33,5 @@ outputs:
     description: A (stringified) array of PHP versions from min to latest, f.e. [8.1, 8.2, 8.3, 8.4]
 
 runs:
-  using: node20
+  using: node22
   main: dist/index.js
