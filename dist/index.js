@@ -28445,8 +28445,8 @@ function requireRe () {
 
 		// ## Pre-release Version Identifier
 		// A numeric identifier, or a non-numeric identifier.
-		// Non-numberic identifiers include numberic identifiers but can be longer.
-		// Therefore non-numberic identifiers must go first.
+		// Non-numeric identifiers include numeric identifiers but can be longer.
+		// Therefore non-numeric identifiers must go first.
 
 		createToken('PRERELEASEIDENTIFIER', `(?:${src[t.NONNUMERICIDENTIFIER]
 		}|${src[t.NUMERICIDENTIFIER]})`);
