@@ -1,6 +1,5 @@
 # PHP Version Action
 
-[![Super-Linter](https://github.com/antfroger/php-version-action/actions/workflows/linter.yml/badge.svg)](https://github.com/antfroger/php-version-action)
 ![CI](https://github.com/antfroger/php-version-action/actions/workflows/ci.yml/badge.svg)
 [![Check dist](https://github.com/antfroger/php-version-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/antfroger/php-version-action/workflows/check-dist.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
